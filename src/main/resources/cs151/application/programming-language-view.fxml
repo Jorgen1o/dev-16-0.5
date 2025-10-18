@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cs151.application.DefineLanguagesController">
+    <top>
+        <Label text="Define Programming Languages" style="-fx-font-size:18px; -fx-font-weight:bold;"
+               BorderPane.alignment="CENTER"/>
+    </top>
+
+    <center>
+        <VBox spacing="12" alignment="TOP_LEFT">
+            <children>
+                <GridPane hgap="8" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="120"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="NEVER"/>
+                    </rowConstraints>
+
+                    <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="nameField" promptText="e.g., Java, Python"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Button text="Add"
+                            onAction="#onAdd"
+                            GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                </GridPane>
+
+                <Label fx:id="errorLabel" textFill="red"/>
+
+                <TitledPane text="Current Languages" expanded="true">
+                    <content>
+                        <ListView fx:id="languagesList"/>
+                    </content>
+                </TitledPane>
+
+                <HBox spacing="8">
+                    <Button text="Save to CSV" onAction="#onSave"/>
+                    <Button text="Delete Selected" onAction="#onDelete"/>
+                    <Button text="Clear" onAction="#onClear"/>
+                </HBox>
+            </children>
+            <padding>
+                <Insets topRightBottomLeft="16"/>
+            </padding>
+        </VBox>
+    </center>
+</BorderPane>

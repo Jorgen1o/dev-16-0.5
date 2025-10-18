@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<?import javafx.scene.control.Button?>
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="cs151.application.MainController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label text="Students' Knowledgebase for Faculties">
+        <font>
+            <Font name="Serif Bold" size="28.0" />
+        </font>
+    </Label>
+
+    <Label text="Helping Faculty Track Student Progress and Skills" />
+    <Label fx:id="welcomeText"/>
+
+    <TextField maxWidth="300.0" promptText="Search Student" />
+
+    <Label text="Features">
+        <font>
+            <Font name="System Bold" size="18.0" />
+        </font>
+        <VBox.margin>
+            <Insets top="20.0" />
+        </VBox.margin>
+    </Label>
+
+    <!--Button for Define Programming Language-->
+    <GridPane alignment="CENTER" hgap="20" vgap="15">
+        <Button text="Define Programming Languages" onAction="#goToDefineLanguages" minHeight="50.0" minWidth="220.0" style="-fx-background-color: #4A90E2; -fx-text-fill: white;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Button text="Manage Student Profiles" onAction="#goToViewStudents" minHeight="50.0" minWidth="220.0" style="-fx-background-color: #4A90E2; -fx-text-fill: white;"  GridPane.columnIndex="0" GridPane.rowIndex="0" />
+
+        <Button minHeight="50.0" minWidth="220.0" style="-fx-background-color: #4A90E2; -fx-text-fill: white;" text="Reports" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+        <Button text="Define Student Profile" onAction="#goToDefineStudents" minHeight="50.0" minWidth="220.0" style="-fx-background-color: #4A90E2; -fx-text-fill: white;"  GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    </GridPane>
+
+</VBox>

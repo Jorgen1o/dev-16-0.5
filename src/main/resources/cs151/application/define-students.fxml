@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cs151.application.DefineStudentsController"
+            fitToWidth="true" fitToHeight="true">
+
+    <content>
+        <VBox spacing="15" alignment="TOP_CENTER"
+              prefWidth="520" maxWidth="Infinity">
+
+            <!-- Outer Padding -->
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <!-- Header -->
+            <Label text="Define Student Profiles"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <!--Basic Information -->
+            <TitledPane text="Basic Information" expanded="true" prefWidth="480">
+                <VBox spacing="10" alignment="TOP_LEFT">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Full Name:"/>
+                        <TextField  promptText="Enter full name" prefWidth="250"/>
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Academic Status:"/>
+                        <ComboBox  prefWidth="150"/>
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Job Status:"/>
+                        <RadioButton  text="Employed"/>
+                        <RadioButton  text="Not Employed" selected="true"/>
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Job Details:"/>
+                        <TextField  promptText="Enter job title or company" prefWidth="250"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+
+            <!-- Skills and Interest -->
+            <TitledPane text="Skills and Interests" expanded="true" prefWidth="480">
+                <VBox spacing="10" alignment="TOP_LEFT">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <!-- Programming Languages Known -->
+                    <VBox spacing="5" alignment="TOP_LEFT">
+                        <Label text="Programming Languages Known:"/>
+                        <ListView  prefHeight="100" prefWidth="300"/>
+                    </VBox>
+
+                    <!-- Databases Known -->
+                    <VBox spacing="5" alignment="TOP_LEFT">
+                        <Label text="Databases Known:"/>
+                        <ListView  prefHeight="100" prefWidth="300"/>
+                    </VBox>
+
+                    <!-- Preferred Professional Role -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Preferred Professional Role:"/>
+                        <ComboBox  prefWidth="200"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+
+            <!-- ===============================
+                 Buttons
+                 =============================== -->
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <padding>
+                    <Insets top="10" right="0" bottom="0" left="0"/>
+                </padding>
+                <Button text="Add Student" />
+                <Button text="Back" onAction="#goBack"/>
+            </HBox>
+
+
+        </VBox>
+    </content>
+</ScrollPane>

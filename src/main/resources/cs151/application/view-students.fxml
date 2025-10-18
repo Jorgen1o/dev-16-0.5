@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="cs151.application.ViewStudentsController"
+      spacing="15" alignment="TOP_CENTER"
+      prefWidth="520" prefHeight="320">
+
+    <!-- Page Padding -->
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Header -->
+    <Label text="All Student Profiles"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <!-- Table of Students -->
+    <TableView  prefHeight="200" prefWidth="480">
+        <columns>
+            <TableColumn  text="Full Name" prefWidth="150"/>
+            <TableColumn  text="Academic Status" prefWidth="120"/>
+            <TableColumn  text="Job Details" prefWidth="120"/>
+            <TableColumn  text="Preferred Role" prefWidth="90"/>
+        </columns>
+    </TableView>
+
+    <!-- Footer Buttons -->
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <padding>
+            <Insets top="10" right="0" bottom="0" left="0"/>
+        </padding>
+        <Button text="Back" onAction="#goBack"/>
+    </HBox>
+
+</VBox>
