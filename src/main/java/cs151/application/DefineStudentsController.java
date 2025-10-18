@@ -1,6 +1,8 @@
 package cs151.application;
 
 import javafx.scene.control.*;
+
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -53,6 +55,12 @@ public class DefineStudentsController {
 
         String output = "\"" + name + "\"," +  "\"" + academicStatus + "\"," + "\"" + (employed ? "Yes" : "No") + "\"," + "\"" + jobDetails + "\"," + "\"" + String.join(";", languages) + "\"," +  "\"" + String.join(";", database) + "\"," +  "\"" + preferredRole + "\"";
 
+        try (FileWriter fw = new FileWriter("Students.csv", true)) {
+            if (new java.io.File("Students.csv").length() == 0) {
+                fw.write("FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole\n");
+            }
+            fw.write(output);
+        }
 
     }
 
