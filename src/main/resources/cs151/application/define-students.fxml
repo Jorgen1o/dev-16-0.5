@@ -31,23 +31,23 @@
 
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="Full Name:"/>
-                        <TextField  promptText="Enter full name" prefWidth="250"/>
+                        <TextField fx:id="studentNameField" promptText="Enter full name" prefWidth="250"/>
                     </HBox>
 
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="Academic Status:"/>
-                        <ComboBox  prefWidth="150"/>
+                        <ComboBox fx:id="academicStatusCombo" prefWidth="150"/>
                     </HBox>
 
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="Job Status:"/>
-                        <RadioButton  text="Employed"/>
-                        <RadioButton  text="Not Employed" selected="true"/>
+                        <RadioButton fx:id="employedRadio" text="Employed"/>
+                        <RadioButton fx:id="notEmployedRadio" text="Not Employed" selected="true"/>
                     </HBox>
 
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="Job Details:"/>
-                        <TextField  promptText="Enter job title or company" prefWidth="250"/>
+                        <TextField fx:id="jobDetailsField" promptText="Enter job title or company" prefWidth="250"/>
                     </HBox>
                 </VBox>
             </TitledPane>
@@ -62,19 +62,19 @@
                     <!-- Programming Languages Known -->
                     <VBox spacing="5" alignment="TOP_LEFT">
                         <Label text="Programming Languages Known:"/>
-                        <ListView  prefHeight="100" prefWidth="300"/>
+                        <ListView fx:id="languagesList" prefHeight="100" prefWidth="300"/>
                     </VBox>
 
                     <!-- Databases Known -->
                     <VBox spacing="5" alignment="TOP_LEFT">
                         <Label text="Databases Known:"/>
-                        <ListView  prefHeight="100" prefWidth="300"/>
+                        <ListView fx:id="databaseList" prefHeight="100" prefWidth="300"/>
                     </VBox>
 
                     <!-- Preferred Professional Role -->
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="Preferred Professional Role:"/>
-                        <ComboBox  prefWidth="200"/>
+                        <ComboBox fx:id="professionalRoleCombo" prefWidth="200"/>
                     </HBox>
                 </VBox>
             </TitledPane>

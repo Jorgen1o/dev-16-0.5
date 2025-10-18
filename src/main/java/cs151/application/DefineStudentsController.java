@@ -1,14 +1,14 @@
 package cs151.application;
 
+import javafx.scene.control.*;
+import java.io.IOException;
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-
-import java.io.IOException;
+import javafx.scene.Node;
 
 public class DefineStudentsController {
     @FXML
@@ -17,12 +17,43 @@ public class DefineStudentsController {
     private ListView<String> studentListView;
 
     @FXML
-    protected void addStudent() {
-        String name = studentNameField.getText();
+    private ComboBox<String> academicStatusCombo;
+    @FXML
+    private RadioButton employedRadio;
+    @FXML
+    private RadioButton notEmployedRadio;
+    @FXML
+    private TextField jobDetailsField;
+    @FXML
+    private ListView<String> languagesList;
+    @FXML
+    private ListView<String> databaseList;
+    @FXML
+    private ComboBox<String> professionalRoleCombo;
+
+
+    @FXML
+    protected void addStudent() throws IOException {
+        String name = studentNameField.getText().trim();
         if (!name.isEmpty()) {
             studentListView.getItems().add(name);
             studentNameField.clear();
         }
+        String academicStatus = academicStatusCombo.getValue();
+        boolean employed = employedRadio.isSelected();
+        String jobDetails;
+        if( employed ) {
+            jobDetails = jobDetailsField.getText().trim();
+        }else{
+            jobDetails ="";
+        }
+        List<String> languages = languagesList.getSelectionModel().getSelectedItems();
+        List<String> database = databaseList.getSelectionModel().getSelectedItems();
+        String preferredRole = professionalRoleCombo.getValue();
+
+        String output = "\"" + name + "\"," +  "\"" + academicStatus + "\"," + "\"" + (employed ? "Yes" : "No") + "\"," + "\"" + jobDetails + "\"," + "\"" + String.join(";", languages) + "\"," +  "\"" + String.join(";", database) + "\"," +  "\"" + preferredRole + "\"";
+
+
     }
 
     @FXML
