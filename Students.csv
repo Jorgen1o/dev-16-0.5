@@ -4,5 +4,6 @@ FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,Prefe
 "Thanh Lam","Junior","No","","Java;Python","MySQL","","Average student","true","false"
 "Johnathan Tweet","Freshman","Yes","Chick Fill A worker","Java;Python","MySQL","Backend Developer","Smart student, enrolled in finish in 4","true","false"
 "Bat Man","Junior","Yes","On Campus Assistant","Java;Python","MySQL","Data Engineer","Enrolled in Finish in 4","true","false"
-"Johnathan Byt","Graduate","Yes","","Java;Python;C++;R;Swing","MySQL;PostgreSQL;MongoDB","Data Engineer","","false","false"
 "Student A","Junior","No","","Java","MongoDB","","No comment","true","false"
+"Rick James","Freshman","No","","Java;Python;Java","SQLite;MongoDB","Full Stack Developer","","false","false"
+"Atheas","Sophomore","No","","Python","MySQL","Backend Developer","","false","false"

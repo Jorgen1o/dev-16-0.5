@@ -101,7 +101,7 @@
                         <Button text="Add" onAction="#addStudent" prefWidth="120.0"/>
                     </HBox>
 
-                    <TitledPane text="Faculty Evaluation &amp; Future Services" expanded="true"
+                    <TitledPane text="Faculty Evaluation &amp; Future Services" expanded="false"
                                 GridPane.rowIndex="8" GridPane.columnIndex="0" GridPane.columnSpan="2">
                         <content>
                             <VBox spacing="10.0">
@@ -111,7 +111,7 @@
 
                                 <Label text="Comments / Journal Entries"/>
                                 <TextArea fx:id="commentsArea"
-                                          promptText="Add an initial faculty comment (you can add more later in View Students)"
+                                          promptText="Add a faculty comment"
                                           wrapText="true" prefRowCount="4"/>
 
                                 <HBox spacing="16.0">

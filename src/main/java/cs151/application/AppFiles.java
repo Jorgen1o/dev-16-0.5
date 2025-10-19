@@ -64,10 +64,9 @@ public final class AppFiles {
         // 4) last resort
         return Paths.get(".").toAbsolutePath().normalize();
     }
-
     /** Load languages into the given ListView (creates file with header if missing). */
     public static void loadLanguages(ListView<String> target) throws IOException {
-        target.setPlaceholder(new Label("No languages found. Use 'Define Languages' to add some."));
+        target.setPlaceholder(new Label("No languages found. Use 'Define Programming Languages' to add some."));
         if (!Files.exists(LANG_CSV)) {
             try (BufferedWriter bw = Files.newBufferedWriter(LANG_CSV, StandardCharsets.UTF_8)) {
                 bw.write("Name\n");
@@ -94,6 +93,5 @@ public final class AppFiles {
             for (String s : langs) if (s != null && !s.isBlank()) bw.write(s.trim() + "\n");
         }
     }
-
     private AppFiles() {}
 }
