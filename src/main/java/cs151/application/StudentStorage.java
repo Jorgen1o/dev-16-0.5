@@ -18,12 +18,34 @@ public final class StudentStorage {
 
     private StudentStorage() {}
 
+    private static String norm(String s) {
+        return s == null ? "" : s.trim().replaceAll("\\s+", " ").toLowerCase();
+    }
+
+    /** True if a row with the same full name already exists. */
+    public static boolean existsByName(String fullName) throws IOException {
+        String key = norm(fullName);
+        for (String[] row : readAllRows()) {
+            if (row.length > 0 && norm(row[0]).equals(key)) return true; // col 0 = Full Name
+        }
+        return false;
+    }
+
     /** Append one row (creates file + header if missing). */
-    public static void appendRow(String[] cols) throws IOException {
+    public static void appendRow(String[] row) throws IOException {
         ensureHeader();
+        if (row == null || row.length == 0)
+            throw new IllegalArgumentException("Empty row");
+        if (row[0] == null || row[0].isBlank())
+            throw new IllegalArgumentException("Full Name is required");
+
+        // Duplicate
+        if (existsByName(row[0])) {
+            throw new IllegalStateException("Duplicate student full name: " + row[0]);
+        }
         try (Writer w = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(CSV_PATH.toFile(), true), StandardCharsets.UTF_8))) {
-            w.write(toCsv(cols));
+            w.write(toCsv(row));
             w.write("\n");
         }
     }
@@ -31,6 +53,14 @@ public final class StudentStorage {
     /** Overwrite file with given rows (keeps header). */
     public static void writeAllRows(List<String[]> rows) throws IOException {
         ensureHeader();
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (String[] r : rows) {
+            if (r == null || r.length == 0) continue;
+            String key = norm(r[0]);
+            if (!seen.add(key)) {
+                throw new IllegalStateException("Duplicate student full name in batch: " + r[0]);
+            }
+        }
         try (Writer w = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(CSV_PATH.toFile(), false), StandardCharsets.UTF_8))) {
             w.write(HEADER);

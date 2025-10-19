@@ -75,15 +75,6 @@ public class DefineStudentsController {
             academicStatusCombo.valueProperty().addListener((o, a, b) -> clearError(academicStatusCombo));
             academicStatusCombo.setPromptText("Select academic status");
         }
-
-        try (var br = new java.io.BufferedReader(
-                new java.io.FileReader("ProgrammingLanguage.csv", java.nio.charset.StandardCharsets.UTF_8))) {
-            String line; boolean header = true;
-            while ((line = br.readLine()) != null) {
-                if (header) { header = false; continue; }
-                if (!line.isBlank()) languagesList.getItems().add(line.trim());
-            }
-        } catch (Exception e) { e.printStackTrace(); }
     }
 
     private void markError(Control c) { if (c != null) c.setStyle(ERR_STYLE); }
@@ -134,6 +125,12 @@ public class DefineStudentsController {
     protected void addStudent() {
         try {
             String name = text(fullNameField);
+            if (StudentStorage.existsByName(name)) {
+                alert(Alert.AlertType.ERROR, "Duplicate Student",
+                        "A student named \"" + name + "\" already exists. " +
+                                "Please edit the existing entry or use a unique name.");
+                return;
+            }
             if (name.isBlank()) {
                 alert(Alert.AlertType.WARNING, "Missing Name", "Please enter the student's name.");
                 return;
