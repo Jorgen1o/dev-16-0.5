@@ -1,0 +1,8 @@
+FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole,Faculty Comment, Whitelisted, Blacklisted
+"Amrit Santhnam","Senior","No","","C++","PostgreSQL","Backend Developer","Performative student","true","false"
+"Jorge","Graduate","No","","Java;Python;C++","MySQL;PostgreSQL;MongoDB","Full Stack Developer","Graduate","false","false"
+"Thanh Lam","Junior","No","","Java;Python","MySQL","","Average student","true","false"
+"Johnathan Tweet","Freshman","Yes","Chick Fill A worker","Java;Python","MySQL","Backend Developer","Smart student, enrolled in finish in 4","true","false"
+"Bat Man","Junior","Yes","On Campus Assistant","Java;Python","MySQL","Data Engineer","Enrolled in Finish in 4","true","false"
+"Johnathan Byt","Graduate","Yes","","Java;Python;C++;R;Swing","MySQL;PostgreSQL;MongoDB","Data Engineer","","false","false"
+"Student A","Junior","No","","Java","MongoDB","","No comment","true","false"

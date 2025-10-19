@@ -58,7 +58,7 @@ public class MainController {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/cs151/application/view-students.fxml"));
         // Create a new Scene using the loaded FXML
-        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 600);
         // Get the current window (Stage)
         Stage stage = (Stage) welcomeText.getScene().getWindow();
         // Set the new scene and update the title

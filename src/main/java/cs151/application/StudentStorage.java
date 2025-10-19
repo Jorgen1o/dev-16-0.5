@@ -11,10 +11,10 @@ import java.util.Objects;
 
 public final class StudentStorage {
     // Keep this path consistent for all reads/writes
-    private static final Path CSV_PATH = Path.of(System.getProperty("user.home"), "Students.csv");
+    private static final Path CSV_PATH = AppFiles.STUDENTS_CSV;
 
     private static final String HEADER =
-            "FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole";
+            "FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole,Faculty Comment, Whitelisted, Blacklisted";
 
     private StudentStorage() {}
 
@@ -76,7 +76,10 @@ public final class StudentStorage {
                 && eq(r[3], s.getJobDetails())
                 && eq(r[4], s.getProgrammingLanguages())
                 && eq(r[5], s.getDatabases())
-                && eq(r[6], s.getPreferredRole());
+                && eq(r[6], s.getPreferredRole())
+                && eq(r[7], s.getFacultyComment())
+                && eq(toYesNo(r[8]), toYesNo(s.getWhiteListed()))
+                && eq(toYesNo(r[9]), toYesNo(s.getBlackListed()));
     }
 
     private static boolean eq(String a, String b) {
@@ -122,5 +125,15 @@ public final class StudentStorage {
         }
         out.add(cur.toString());
         return out.toArray(String[]::new);
+    }
+
+    private static boolean parseBool(String s) {
+        if (s == null) return false;
+        String t = s.trim().toLowerCase();
+        return t.equals("true") || t.equals("yes") || t.equals("y") || t.equals("1");
+    }
+
+    static String toYesNo(String s) {
+        return parseBool(s) ? "Yes" : "No";
     }
 }

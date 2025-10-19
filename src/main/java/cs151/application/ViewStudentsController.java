@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -27,8 +28,17 @@ public class ViewStudentsController {
     @FXML private TableColumn<Student, String> languagesCol;
     @FXML private TableColumn<Student, String> databasesCol;
     @FXML private TableColumn<Student, String> roleCol;
+    @FXML private TableColumn<Student, String> facultyComment;
+    @FXML private TableColumn<Student, String> whiteListed;
+    @FXML private TableColumn<Student, String> blackListed;
 
     private SortedList<Student> sorted;
+
+    private static boolean parseBool(String s) {
+        if (s == null) return false;
+        String t = s.trim().toLowerCase();
+        return t.equals("yes") || t.equals("true") || t.equals("y") || t.equals("1");
+    }
 
     @FXML
     public void initialize() {
@@ -39,6 +49,9 @@ public class ViewStudentsController {
         languagesCol.setCellValueFactory(new PropertyValueFactory<>("programmingLanguages"));
         databasesCol.setCellValueFactory(new PropertyValueFactory<>("databases"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("preferredRole"));
+        facultyComment.setCellValueFactory(new PropertyValueFactory<>("facultyComment"));
+        whiteListed.setCellValueFactory(new PropertyValueFactory<>("whiteListed"));
+        blackListed.setCellValueFactory(new PropertyValueFactory<>("blackListed"));
 
         refresh();
     }
@@ -62,7 +75,7 @@ public class ViewStudentsController {
         List<Student> list = new ArrayList<>();
         try {
             for (String[] r : StudentStorage.readAllRows()) {
-                if (r.length >= 7) list.add(new Student(r[0], r[1], r[2], r[3], r[4], r[5], r[6]));
+                if (r.length >= 10) list.add(new Student(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], StudentStorage.toYesNo(r[8]), StudentStorage.toYesNo(r[9])));
             }
         } catch (Exception e) {
             e.printStackTrace();
