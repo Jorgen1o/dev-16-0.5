@@ -19,7 +19,7 @@
     </top>
 
     <center>
-        <TableView fx:id="studentsTable" prefWidth="900" prefHeight="470">
+        <TableView fx:id="studentsTable" prefWidth="1280" prefHeight="470">
             <columns>
                 <TableColumn fx:id="nameCol" text="Full Name" prefWidth="160"/>
                 <TableColumn fx:id="academicStatusCol" text="Academic Status" prefWidth="130"/>
@@ -28,6 +28,9 @@
                 <TableColumn fx:id="languagesCol" text="Programming Languages" prefWidth="170"/>
                 <TableColumn fx:id="databasesCol" text="Databases" prefWidth="110"/>
                 <TableColumn fx:id="roleCol" text="Preferred Role" prefWidth="140"/>
+                <TableColumn fx:id="facultyComment" text="Faculty Comment"/>
+                <TableColumn fx:id="whiteListed" text="Whitelisted"/>
+                <TableColumn fx:id="blackListed" text="Blacklisted"/>
             </columns>
         </TableView>
     </center>

@@ -19,11 +19,22 @@ public class DefineStudentsController {
     @FXML private ListView<String> languagesList;
     @FXML private ListView<String> databasesList;
     @FXML private ComboBox<String> preferredRoleCombo;
+    @FXML private TextArea commentsArea;
+    @FXML private CheckBox whitelistCheckBox;
+    @FXML private CheckBox blacklistCheckBox;
 
     @FXML
     public void initialize() {
         // In DefineStudentsController.initialize()
         languagesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        databasesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        whitelistCheckBox.selectedProperty().addListener((obs, was, is) -> {
+            if (is) blacklistCheckBox.setSelected(false);
+        });
+        blacklistCheckBox.selectedProperty().addListener((obs, was, is) -> {
+            if (is) whitelistCheckBox.setSelected(false);
+        });
 
         try (var br = new java.io.BufferedReader(
                 new java.io.FileReader("ProgrammingLanguage.csv", java.nio.charset.StandardCharsets.UTF_8))) {
@@ -50,8 +61,12 @@ public class DefineStudentsController {
             String langs = selected(languagesList);
             String dbs = selected(databasesList);
             String role = combo(preferredRoleCombo);
+            String initialComment = (commentsArea == null || commentsArea.getText() == null)
+                    ? "" : commentsArea.getText().trim();
+            boolean white = whitelistCheckBox.isSelected();
+            boolean black = blacklistCheckBox.isSelected();
 
-            StudentStorage.appendRow(new String[]{name, academic, employed, job, langs, dbs, role});
+            StudentStorage.appendRow(new String[]{name, academic, employed, job, langs, dbs, role, initialComment, String.valueOf(white), String.valueOf(black)});
             alert(Alert.AlertType.INFORMATION, "Saved", "Student added successfully!");
             clearForm();
         } catch (Exception e) {
@@ -87,5 +102,8 @@ public class DefineStudentsController {
         if (languagesList != null) languagesList.getSelectionModel().clearSelection();
         if (databasesList != null) databasesList.getSelectionModel().clearSelection();
         if (preferredRoleCombo != null) preferredRoleCombo.getSelectionModel().clearSelection();
+        if (commentsArea != null) commentsArea.clear();
+        if (whitelistCheckBox != null) whitelistCheckBox.setSelected(false);
+        if (blacklistCheckBox != null) blacklistCheckBox.setSelected(false);
     }
 }
