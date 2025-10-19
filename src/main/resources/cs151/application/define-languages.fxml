@@ -8,35 +8,37 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="cs151.application.DefineLanguagesController"
       alignment="TOP_CENTER" spacing="15.0"
-      prefHeight="400.0" prefWidth="400.0"
+      prefHeight="400.0" prefWidth="480.0"
       fillWidth="true">
 
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
     </padding>
 
     <!-- Title -->
-    <Label text="Define Programming Languages" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Label text="Define Programming Languages"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
-    <!-- Input field with Add button -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <TextField fx:id="nameField" promptText="Enter language" HBox.hgrow="ALWAYS"/>
-        <Button text="Add" onAction="#onAdd"/>
+    <!-- Input row -->
+    <HBox spacing="10.0" alignment="CENTER_LEFT" maxWidth="Infinity">
+        <TextField fx:id="languageField" promptText="Enter language" HBox.hgrow="ALWAYS"/>
+        <Button text="Add" onAction="#addLanguage"/>
     </HBox>
 
     <Label fx:id="errorLabel" textFill="red"/>
 
-    <!-- Label above list of languages -->
+    <!-- List label -->
     <Label text="Current Programming Languages"/>
 
-    <!-- List of languages -->
-    <ListView fx:id="languagesList" prefHeight="200" prefWidth="350" VBox.vgrow="ALWAYS"/>
+    <!-- List -->
+    <ListView fx:id="languagesList" prefHeight="220.0" VBox.vgrow="ALWAYS"/>
 
-    <!-- Back button -->
-    <HBox spacing="8">
-        <Button text="Save to CSV" onAction="#onSave"/>
+    <!-- Actions -->
+    <HBox spacing="8.0">
+        <!-- onSave removed because Add already autosaves -->
         <Button text="Clear" onAction="#onClear"/>
         <Button text="Delete Selected" onAction="#onDelete"/>
+        <Pane HBox.hgrow="ALWAYS"/>
         <Button text="Back" onAction="#goBack"/>
     </HBox>
 </VBox>

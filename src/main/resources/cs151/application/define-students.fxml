@@ -3,94 +3,107 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
-
-<ScrollPane xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
             fx:controller="cs151.application.DefineStudentsController"
-            fitToWidth="true" fitToHeight="true">
+            prefWidth="900.0" prefHeight="600.0">
 
-    <content>
-        <VBox spacing="15" alignment="TOP_CENTER"
-              prefWidth="520" maxWidth="Infinity">
+    <top>
+        <ToolBar>
+            <Label text="  Define Student Profiles" style="-fx-font-size:18px; -fx-font-weight:bold;"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button text="Back" onAction="#goBack"/>
+        </ToolBar>
+    </top>
 
-            <!-- Outer Padding -->
-            <padding>
-                <Insets top="15" right="15" bottom="15" left="15"/>
-            </padding>
+    <!-- Scrollable, responsive center -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" pannable="false">
+            <content>
+                <GridPane hgap="12.0" vgap="14.0" maxWidth="Infinity">
+                    <padding><Insets topRightBottomLeft="16.0"/></padding>
 
-            <!-- Header -->
-            <Label text="Define Student Profiles"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <!-- two columns: 35% labels, 65% controls -->
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="35"/>
+                        <ColumnConstraints percentWidth="65" hgrow="ALWAYS"/>
+                    </columnConstraints>
 
-            <!--Basic Information -->
-            <TitledPane text="Basic Information" expanded="true" prefWidth="480">
-                <VBox spacing="10" alignment="TOP_LEFT">
-                    <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
-                    </padding>
+                    <!-- Full Name -->
+                    <Label text="Full Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="fullNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                               maxWidth="Infinity"/>
 
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Full Name:"/>
-                        <TextField fx:id="studentNameField" promptText="Enter full name" prefWidth="250"/>
+                    <!-- Academic Status -->
+                    <Label text="Academic Status:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="academicStatusCombo" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                              maxWidth="Infinity">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Freshman"/>
+                                <String fx:value="Sophomore"/>
+                                <String fx:value="Junior"/>
+                                <String fx:value="Senior"/>
+                                <String fx:value="Graduate"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+
+                    <!-- Employed -->
+                    <Label text="Employed:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="employedCheckBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <!-- Job Details -->
+                    <Label text="Job Details:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="jobDetailsField" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                               maxWidth="Infinity"/>
+
+                    <!-- Programming Languages (loaded dynamically by controller) -->
+                    <Label text="Programming Languages:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <ListView fx:id="languagesList" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                              prefHeight="160.0" maxWidth="Infinity" GridPane.vgrow="ALWAYS"/>
+
+                    <!-- Databases -->
+                    <Label text="Databases:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <ListView fx:id="databasesList" GridPane.rowIndex="5" GridPane.columnIndex="1"
+                              prefHeight="140.0" maxWidth="Infinity">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="SQLite"/>
+                                <String fx:value="MySQL"/>
+                                <String fx:value="PostgreSQL"/>
+                                <String fx:value="MongoDB"/>
+                            </FXCollections>
+                        </items>
+                    </ListView>
+
+                    <!-- Preferred Role -->
+                    <Label text="Preferred Role:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="preferredRoleCombo" GridPane.rowIndex="6" GridPane.columnIndex="1"
+                              maxWidth="Infinity">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Backend Developer"/>
+                                <String fx:value="Frontend Developer"/>
+                                <String fx:value="Full Stack Developer"/>
+                                <String fx:value="Data Engineer"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+
+                    <!-- Buttons (right-aligned) -->
+                    <Pane GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                    <HBox spacing="10.0" alignment="CENTER_RIGHT"
+                          GridPane.rowIndex="7" GridPane.columnIndex="1">
+                        <Button text="Add" onAction="#addStudent" prefWidth="120.0"/>
                     </HBox>
 
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Academic Status:"/>
-                        <ComboBox fx:id="academicStatusCombo" prefWidth="150"/>
-                    </HBox>
+                </GridPane>
+            </content>
+        </ScrollPane>
+    </center>
 
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Job Status:"/>
-                        <RadioButton fx:id="employedRadio" text="Employed"/>
-                        <RadioButton fx:id="notEmployedRadio" text="Not Employed" selected="true"/>
-                    </HBox>
-
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Job Details:"/>
-                        <TextField fx:id="jobDetailsField" promptText="Enter job title or company" prefWidth="250"/>
-                    </HBox>
-                </VBox>
-            </TitledPane>
-
-            <!-- Skills and Interest -->
-            <TitledPane text="Skills and Interests" expanded="true" prefWidth="480">
-                <VBox spacing="10" alignment="TOP_LEFT">
-                    <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
-                    </padding>
-
-                    <!-- Programming Languages Known -->
-                    <VBox spacing="5" alignment="TOP_LEFT">
-                        <Label text="Programming Languages Known:"/>
-                        <ListView fx:id="languagesList" prefHeight="100" prefWidth="300"/>
-                    </VBox>
-
-                    <!-- Databases Known -->
-                    <VBox spacing="5" alignment="TOP_LEFT">
-                        <Label text="Databases Known:"/>
-                        <ListView fx:id="databaseList" prefHeight="100" prefWidth="300"/>
-                    </VBox>
-
-                    <!-- Preferred Professional Role -->
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Preferred Professional Role:"/>
-                        <ComboBox fx:id="professionalRoleCombo" prefWidth="200"/>
-                    </HBox>
-                </VBox>
-            </TitledPane>
-
-            <!-- ===============================
-                 Buttons
-                 =============================== -->
-            <HBox alignment="CENTER_RIGHT" spacing="10">
-                <padding>
-                    <Insets top="10" right="0" bottom="0" left="0"/>
-                </padding>
-                <Button text="Add Student" />
-                <Button text="Back" onAction="#goBack"/>
-            </HBox>
-
-
-        </VBox>
-    </content>
-</ScrollPane>
+</BorderPane>
