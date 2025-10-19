@@ -1,162 +1,127 @@
 package cs151.application;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefineLanguagesController {
 
-    public TextField fullNameField;
-    //References to text field where user enters new language
-    @FXML private TextField nameField;
+    @FXML private TextField languageField;     // matches FXML
+    @FXML private ListView<String> languagesList;
     @FXML private Label errorLabel;
 
-    //Reference to the ListView that displays list of added programming language
-    @FXML private ListView<String> languagesList;
-
-
-    private ObservableList<String> items = FXCollections.observableArrayList();
-    private final Set<String> canonical = new HashSet<>(); // lowercased, trimmed for dup checks
-
-    private static final Path CSV_PATH = Paths.get("ProgrammingLanguage.csv");
+    private static final String LANG_CSV = "ProgrammingLanguage.csv"; // project root
 
     @FXML
     public void initialize() {
-        items = FXCollections.observableArrayList();
-        languagesList.setItems(items);
-        loadIfPresent(); // harmless if file absent
+        languagesList.setItems(FXCollections.observableArrayList(loadLanguages()));
+        if (errorLabel != null) errorLabel.setText("");
     }
 
+    /** Add & autosave to CSV */
     @FXML
-    private void onAdd() {
-        errorLabel.setText("");
-        String raw = nameField.getText();
-        String trimmed = raw == null ? "" : raw.trim();
-
-        // required field per Problem Statement §2.1.1(1)
-        if (trimmed.isEmpty()) {
-            errorLabel.setText("Language name required.");
+    private void addLanguage() {
+        String name = languageField.getText() == null ? "" : languageField.getText().trim();
+        if (name.isEmpty()) {
+            setError("Please enter a language name.");
             return;
         }
-
-        // Check duplicates case-insensitively
-        String key = trimmed.toLowerCase();
-        if (canonical.contains(key)) {
-            errorLabel.setText("Language already exists.");
+        // prevent duplicates (case-insensitive)
+        for (String s : languagesList.getItems()) {
+            if (s.equalsIgnoreCase(name)) {
+                setError("That language already exists.");
+                return;
+            }
+        }
+        // append to CSV immediately
+        File f = new File(LANG_CSV);
+        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(
+                new FileOutputStream(f, true), StandardCharsets.UTF_8))) {
+            if (!f.exists() || f.length() == 0) {
+                pw.println("Name"); // header once
+            }
+            pw.println(name);
+        } catch (IOException e) {
+            setError("Failed to save: " + e.getMessage());
             return;
         }
-
-        // add and keep list sorted for a nicer UX
-        canonical.add(key);
-        items.add(trimmed);
-        items.sort(String.CASE_INSENSITIVE_ORDER);
-        nameField.clear();
+        // update UI
+        languagesList.getItems().add(name);
+        languageField.clear();
+        setError(""); // clear any previous error
     }
 
+    /** Clear the TextField */
     @FXML
     private void onClear() {
-        errorLabel.setText("");
-        nameField.clear();
-        languagesList.getSelectionModel().clearSelection();
+        if (languageField != null) languageField.clear();
+        setError("");
     }
 
+    /** Delete selected item and rewrite the CSV */
     @FXML
-    private void onSave() {
-        errorLabel.setText("");
-        try {
-            saveToCsv(items);
-            errorLabel.setText("Saved to ProgrammingLanguage.csv");
-        } catch (IOException e) {
-            errorLabel.setText("Error saving CSV: " + e.getMessage());
+    private void onDelete() {
+        String sel = languagesList.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            setError("Select a language to delete.");
+            return;
         }
+        languagesList.getItems().remove(sel);
+        writeAllLanguages(languagesList.getItems());
+        setError("");
     }
 
-    private void saveToCsv(ObservableList<String> data) throws IOException {
-        // write header + sorted unique values
-        Files.createDirectories(CSV_PATH.getParent() == null ? Paths.get(".") : CSV_PATH.getParent());
-        try (BufferedWriter w = Files.newBufferedWriter(CSV_PATH, StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-            w.write("Name");
-            w.newLine();
-            for (String s : data.stream().distinct().sorted().toList()) {
-                w.write(s);
-                w.newLine();
-            }
-        }
-    }
-
-    private void loadIfPresent() {
-        try {
-            if (Files.exists(CSV_PATH)) {
-                var lines = Files.readAllLines(CSV_PATH, StandardCharsets.UTF_8);
-                for (String line : lines.stream().skip(1).toList()) {
-                    String trimmed = line.trim();
-                    if (!trimmed.isEmpty()) {
-                        String key = trimmed.toLowerCase();
-                        if (canonical.add(key)) items.add(trimmed);
-                    }
-                }
-                // ✅ Add this:
-                items.sort(String.CASE_INSENSITIVE_ORDER);
-            }
-        } catch (IOException ignored) {
-            // No problem if loading fails
-        }
-    }
-
-    //handles action of going back to home screen
+    /** Back to home */
     @FXML
-    protected void goBack(javafx.event.ActionEvent event) throws IOException {
-        //Loads FXML for home screen
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cs151/application/hello-view.fxml"));
-        //Creates new scene with loaded FXML
-        Scene scene = new Scene(fxmlLoader.load(), 800, 500);
-        //Gets currents stage from event source
+    private void goBack(javafx.event.ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/hello-view.fxml"));
+        Scene scene = new Scene(loader.load(), 800, 500);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        //Sets new scene
         stage.setScene(scene);
         stage.setTitle("Home");
         stage.show();
     }
 
-    @FXML
-    private void onDelete() {
-        errorLabel.setText("");
+    /* ---------- helpers ---------- */
 
-        String selected = languagesList.getSelectionModel().getSelectedItem();
-
-        if (selected == null) {
-            errorLabel.setText("Please select a language to delete.");
-            return;
-        }
-
-        // Remove from both lists
-        items.remove(selected);
-        canonical.remove(selected.toLowerCase());
-
-        // Update CSV after deletion
-        try {
-            saveToCsv(items);
-            errorLabel.setText("Deleted and saved changes.");
+    private List<String> loadLanguages() {
+        List<String> list = new ArrayList<>();
+        File f = new File(LANG_CSV);
+        if (!f.exists()) return list;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                new FileInputStream(f), StandardCharsets.UTF_8))) {
+            String line; boolean header = true;
+            while ((line = br.readLine()) != null) {
+                if (header) { header = false; continue; }
+                line = line.trim();
+                if (!line.isBlank()) list.add(line);
+            }
         } catch (IOException e) {
-            errorLabel.setText("Error saving after deletion: " + e.getMessage());
+            setError("Failed to load CSV: " + e.getMessage());
         }
+        return list;
+    }
+
+    private void writeAllLanguages(List<String> langs) {
+        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(
+                new FileOutputStream(LANG_CSV, false), StandardCharsets.UTF_8))) {
+            pw.println("Name");
+            for (String s : langs) pw.println(s);
+        } catch (IOException e) {
+            setError("Failed to rewrite CSV: " + e.getMessage());
+        }
+    }
+
+    private void setError(String msg) {
+        if (errorLabel != null) errorLabel.setText(msg == null ? "" : msg);
     }
 }

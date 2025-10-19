@@ -26,7 +26,7 @@ public class MainController {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/cs151/application/define-languages.fxml"));
         //Create a new Scene using the loaded FXML
-        Scene scene = new Scene(fxmlLoader.load(), 520, 320);
+        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
         //Get the current window from the welcomeText label
         Stage stage = (Stage) welcomeText.getScene().getWindow();
         //Set the new scene on the current stage and update the window title
@@ -42,7 +42,7 @@ public class MainController {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/cs151/application/define-students.fxml"));
         // Create a new Scene using the loaded FXML
-        Scene scene = new Scene(fxmlLoader.load(), 520, 320);
+        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
         // Get the current window (Stage)
         Stage stage = (Stage) welcomeText.getScene().getWindow();
         // Set the new scene and update the title
@@ -58,7 +58,7 @@ public class MainController {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/cs151/application/view-students.fxml"));
         // Create a new Scene using the loaded FXML
-        Scene scene = new Scene(fxmlLoader.load(), 520, 320);
+        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
         // Get the current window (Stage)
         Stage stage = (Stage) welcomeText.getScene().getWindow();
         // Set the new scene and update the title
