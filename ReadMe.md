@@ -1,15 +1,13 @@
-# Name of application:
+# Name of application: CS Students Management System
 
-# Version: 0.5
+# Version: 0.6
 
 # who did what:
 
-1. Amrit Santhanam  : Save and store Student Profiles in alphabetical order in Manage Student Profiles, added academic status, role, and database options to Define Student Profile.
-2. Jorge Nateras    : UI Design and Button Navigation for Define Student Profile and Manage Students
-3. Thuan Thanh Lam  :
-4. Yuen Kiu Tang    : User stores permanently the Students Profiles info entered above one by one
-
-
+1. Amrit Santhanam  : 
+2. Jorge Nateras    : 
+3. Thuan Thanh Lam  : adjust Define Student Profile, add conditioning for inputs, adjust saving path
+4. Yuen Kiu Tang    : 
 
 # Any other instruction that users need to know:
 

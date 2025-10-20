@@ -2,24 +2,22 @@ package cs151.application;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class ViewStudentsController {
 
+    // Table
     @FXML private TableView<Student> studentsTable;
     @FXML private TableColumn<Student, String> nameCol;
     @FXML private TableColumn<Student, String> academicStatusCol;
@@ -34,11 +32,13 @@ public class ViewStudentsController {
 
     private SortedList<Student> sorted;
 
-    private static boolean parseBool(String s) {
-        if (s == null) return false;
-        String t = s.trim().toLowerCase();
-        return t.equals("yes") || t.equals("true") || t.equals("y") || t.equals("1");
-    }
+    // Search Filter
+    @FXML private TextField nameField, jobContains, langContains, dbContains;
+    @FXML private ComboBox<String> academicStatusCombo, roleCombo;
+    @FXML private CheckBox employedOnly;
+
+    private final ObservableList<Student> master = FXCollections.observableArrayList();
+    private FilteredList<Student> filtered;
 
     @FXML
     public void initialize() {
@@ -53,22 +53,167 @@ public class ViewStudentsController {
         whiteListed.setCellValueFactory(new PropertyValueFactory<>("whiteListed"));
         blackListed.setCellValueFactory(new PropertyValueFactory<>("blackListed"));
 
+        studentsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        filtered = new FilteredList<>(master, s -> true);
+        sorted = new SortedList<>(filtered);
+        sorted.comparatorProperty().bind(studentsTable.comparatorProperty());
+        studentsTable.setItems(sorted);
+
         refresh();
+
+        // Populate dropdowns
+        academicStatusCombo.getItems().setAll("Freshman", "Sophomore", "Junior", "Senior", "Graduate");
+        roleCombo.getItems().setAll("Backend Developer", "Frontend Developer", "Full Stack Developer", "Data Engineer");
+        initFilterChoices();
+        installPrompt(academicStatusCombo, "Academic status");
+        installPrompt(roleCombo, "Preferred role");
     }
 
     private void refresh() {
-        ObservableList<Student> data = FXCollections.observableArrayList(loadStudents());
-        if (data.isEmpty()) {
+        List<Student> loaded = loadStudents();
+        master.setAll(loaded);
+
+        if (master.isEmpty()) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("No Students Found");
             a.setHeaderText("No Stored Student Profiles");
             a.setContentText("Add profiles in the Define Students screen, then return here.");
             a.showAndWait();
         }
-        sorted = new SortedList<>(data);
-        sorted.setComparator(Comparator.comparing(s ->
-                Optional.ofNullable(s.getFullName()).orElse("").toLowerCase()));
-        studentsTable.setItems(sorted);
+    }
+
+    @FXML
+    public void applyFilters() {
+        filtered.setPredicate(buildPredicate());
+    }
+
+    @FXML
+    public void clearFilters() {
+        if (nameField != null) nameField.clear();
+        if (jobContains != null) jobContains.clear();
+        if (langContains != null) langContains.clear();
+        if (dbContains != null) dbContains.clear();
+        if (academicStatusCombo != null) {
+            academicStatusCombo.getSelectionModel().clearSelection();
+            academicStatusCombo.setValue(null);        // explicitly no selection
+        }
+        if (roleCombo != null) {
+            roleCombo.getSelectionModel().clearSelection();
+            roleCombo.setValue(null);
+        }
+        if (employedOnly != null) employedOnly.setSelected(false);
+        initFilterChoices();
+        filtered.setPredicate(s -> true);
+    }
+
+    private Predicate<Student> buildPredicate() {
+        String name = norm(nameField);
+        String status = norm(academicStatusCombo);
+        String role = norm(roleCombo);
+        String job = norm(jobContains);
+        String lang = norm(langContains);
+        String db = norm(dbContains);
+        boolean empOnly = employedOnly != null && employedOnly.isSelected();
+
+        return s -> {
+            if (!contains(norm(s.getFullName()), name)) return false;
+            if (!status.isEmpty() && !eq(norm(s.getAcademicStatus()), status)) return false;
+            if (empOnly && !"yes".equals(norm(s.getEmployed()))) return false;
+            if (!job.isEmpty() && !contains(norm(s.getJobDetails()), job)) return false;
+            if (!lang.isEmpty() && !contains(norm(s.getProgrammingLanguages()), lang)) return false;
+            if (!db.isEmpty() && !contains(norm(s.getDatabases()), db)) return false;
+            if (!role.isEmpty() && !eq(norm(s.getPreferredRole()), role)) return false;
+            return true;
+        };
+    }
+
+    private static String norm(TextField t) { return t == null || t.getText() == null ? "" : t.getText().trim().toLowerCase(); }
+    private static String norm(ComboBox<String> c) { return (c == null || c.getValue() == null) ? "" : c.getValue().trim().toLowerCase(); }
+    private static String norm(String s) { return s == null ? "" : s.trim().toLowerCase(); }
+    private static boolean contains(String hay, String needle) { return needle.isEmpty() || hay.contains(needle); }
+    private static boolean eq(String a, String b) { return a.equals(b); }
+
+    // === Edit ===
+
+    @FXML
+    public void editSelected() {
+        Student selected = studentsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        try {
+            FXMLLoader fxml = new FXMLLoader(getClass().getResource("/cs151/application/edit-student.fxml"));
+            DialogPane pane = fxml.load();
+            EditStudentController ctrl = fxml.getController();
+            ctrl.setStudent(selected);
+
+            Dialog<ButtonType> dlg = new Dialog<>();
+            dlg.setTitle("Edit Student");
+            dlg.setDialogPane(pane);
+            Optional<ButtonType> res = dlg.showAndWait();
+            if (res.isPresent() && res.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+                Student updated = ctrl.buildStudent();
+                // prevent duplicate name (other than self)
+                if (wouldDuplicateName(updated.getFullName(), selected)) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "Another profile already uses the full name \"" + updated.getFullName() + "\".")
+                            .showAndWait();
+                    return;
+                }
+                // replace in master list
+                int idx = master.indexOf(selected);
+                if (idx >= 0) master.set(idx, updated);
+                persistAll(); // write back to CSV
+            }
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to open editor: " + e.getMessage()).showAndWait();
+        }
+    }
+
+    private void persistAll() {
+        try {
+            List<String[]> rows = new ArrayList<>();
+            for (Student s : master) {
+                rows.add(new String[] {
+                        s.getFullName(), s.getAcademicStatus(), s.getEmployed(), s.getJobDetails(),
+                        s.getProgrammingLanguages(), s.getDatabases(), s.getPreferredRole(),
+                        s.getFacultyComment(), s.getWhiteListed(), s.getBlackListed()
+                });
+            }
+            StudentStorage.writeAllRows(rows);
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to save: " + e.getMessage()).showAndWait();
+        }
+    }
+
+    private boolean wouldDuplicateName(String candidate, Student self) {
+        String key = norm(candidate);
+        for (Student s : master) {
+            if (s == self) continue;
+            if (norm(s.getFullName()).equals(key)) return true;
+        }
+        return false;
+    }
+
+    private void initFilterChoices() {
+        if (academicStatusCombo.getItems().isEmpty()) {
+            academicStatusCombo.getItems().setAll("Freshman", "Sophomore", "Junior", "Senior", "Graduate");
+        }
+        if (roleCombo.getItems().isEmpty()) {
+            roleCombo.getItems().setAll(
+                    "Backend Developer", "Frontend Developer", "Full Stack Developer", "Data Engineer"
+            );
+        }
+    }
+
+    private void installPrompt(ComboBox<String> cb, String prompt) {
+        cb.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null || item.isBlank()) ? prompt : item);
+            }
+        });
     }
 
     private List<Student> loadStudents() {

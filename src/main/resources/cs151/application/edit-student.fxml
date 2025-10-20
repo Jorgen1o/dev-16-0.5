@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cs151.application.EditStudentController" prefWidth="520">
+    <content>
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="140.0"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+
+            <Label text="Full Name:"              GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="nameField"         GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Academic Status:"        GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="statusCombo"        GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Employed (Yes/No):"     GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="employedCombo"      GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Job Details:"           GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="jobField"          GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Languages (comma-separated):" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="langsField"        GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <Label text="Databases (comma-separated):" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="dbsField"          GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+            <Label text="Preferred Role:"        GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="roleCombo"          GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+            <Label text="Faculty Comment:"       GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+            <TextArea fx:id="facArea"            GridPane.rowIndex="7" GridPane.columnIndex="1" prefRowCount="3"/>
+
+            <Label text="WhiteListed (Yes/No):"  GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="whiteCombo"         GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+            <Label text="BlackListed (Yes/No):"  GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="blackCombo"         GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        </GridPane>
+    </content>
+    <buttonTypes>
+        <ButtonType text="Save"  buttonData="OK_DONE"/>
+        <ButtonType text="Cancel" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

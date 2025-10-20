@@ -11,10 +11,20 @@
 
     <top>
         <ToolBar>
+            <Label text="Search: "/>
+            <TextField fx:id="nameField" promptText="Name contains" />
+            <ComboBox fx:id="academicStatusCombo" promptText="Academic status" />
+            <ComboBox fx:id="roleCombo" promptText="Preferred role" />
+            <CheckBox fx:id="employedOnly" text="Employed only"/>
+            <TextField fx:id="jobContains" promptText="Job contains"/>
+            <TextField fx:id="langContains" promptText="Language contains"/>
+            <TextField fx:id="dbContains"  promptText="Database contains"/>
+
+            <Separator/>
+            <Button text="Apply" onAction="#applyFilters"/>
+            <Button text="Clear" onAction="#clearFilters"/>
+            <Pane HBox.hgrow="ALWAYS"/>
             <Button text="Back" onAction="#goBack"/>
-            <Label text="  All Stored Students Profiles" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
-            <Pane HBox.hgrow="ALWAYS"/> <!-- pushes delete button to the right -->
-            <Button text="Delete Selected" onAction="#deleteSelected"/>
         </ToolBar>
     </top>
 
@@ -35,5 +45,10 @@
         </TableView>
     </center>
 
-    <padding><Insets topRightBottomLeft="8"/></padding>
+    <bottom>
+        <ToolBar>
+            <Button text="Edit Selected"   onAction="#editSelected"/>
+            <Button text="Delete Selected" onAction="#deleteSelected"/>
+        </ToolBar>
+    </bottom>
 </BorderPane>
