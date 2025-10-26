@@ -1,9 +1,10 @@
-FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole,Faculty Comment, Whitelisted, Blacklisted
+FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole,Faculty Comment,Whitelisted,Blacklisted
 "Amrit Santhnam","Senior","No","","C++","PostgreSQL","Backend Developer","Performative student","true","false"
-"Jorge","Graduate","No","","Java;Python;C++","MySQL;PostgreSQL;MongoDB","Full Stack Developer","Graduate","false","false"
+"Jorge","Graduate","No","","Java;Python;C++","MySQL;PostgreSQL;MongoDB","Full Stack Developer","Graduate
+2025-10-25: Looking for work","No","No"
 "Johnathan Tweet","Freshman","Yes","Chick Fill A worker","Java;Python","MySQL","Backend Developer","Smart student, enrolled in finish in 4","true","false"
 "Bat Man","Junior","Yes","On Campus Assistant","Java;Python","MySQL","Data Engineer","Enrolled in Finish in 4","true","false"
-"Student A","Junior","No","","Java","MongoDB","","No comment","true","false"
+"Student A","Junior","No","","Java","MongoDB","","No comment
+2025-10-25: Interning at Nvidia","Yes","No"
 "Rick James","Freshman","No","","Java;Python;Java","SQLite;MongoDB","Full Stack Developer","","false","false"
-"Atheas","Sophomore","No","","Python","MySQL","Backend Developer","","false","false"
 "Thanh Lam","Sophomore","No","","Java, Python, R","MySQL, MongoDB","Data Engineer","","false","false"

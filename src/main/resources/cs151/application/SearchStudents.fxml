@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cs151.application.SearchStudentsController"
+            prefWidth="900" prefHeight="600">
+
+    <!-- TOP BAR -->
+    <top>
+        <!-- ⚠️ WRONG: <VBox spacing="8" padding="10"> -->
+        <!-- ✅ FIXED: Add padding as Insets block -->
+        <VBox spacing="8">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="Back" onAction="#goBack"/>
+                <Label text="Search Student Profiles"
+                       style="-fx-font-size:18px; -fx-font-weight:bold;"/>
+            </HBox>
+
+            <!-- SEARCH FORM -->
+            <GridPane hgap="10" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" minWidth="120"/>
+                    <ColumnConstraints halignment="LEFT" prefWidth="250"/>
+                </columnConstraints>
+
+                <children>
+                    <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="nameField" promptText="Enter name"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Academic Status:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="statusField" promptText="e.g., Sophomore"
+                               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Programming Language:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="langField" promptText="e.g., Java"
+                               GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Database:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="dbField" promptText="e.g., MySQL"
+                               GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Professional Role:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="roleField" promptText="e.g., Backend Developer"
+                               GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                        <Button text="Search" onAction="#search"/>
+                        <Button text="Clear" onAction="#clearFilters"/>
+                    </HBox>
+                </children>
+            </GridPane>
+        </VBox>
+    </top>
+
+    <!-- TABLE AREA -->
+    <center>
+        <TableView fx:id="studentsTable" prefHeight="400" prefWidth="880">
+            <columns>
+                <TableColumn fx:id="nameCol" text="Full Name" prefWidth="150"/>
+                <TableColumn fx:id="academicStatusCol" text="Academic Status" prefWidth="120"/>
+                <TableColumn fx:id="employedCol" text="Employed" prefWidth="80"/>
+                <TableColumn fx:id="jobCol" text="Job Details" prefWidth="150"/>
+                <TableColumn fx:id="languagesCol" text="Programming Languages" prefWidth="160"/>
+                <TableColumn fx:id="databasesCol" text="Databases" prefWidth="120"/>
+                <TableColumn fx:id="roleCol" text="Preferred Role" prefWidth="140"/>
+                <TableColumn fx:id="facultyComment" text="Faculty Comment" prefWidth="180"/>
+                <TableColumn fx:id="whiteListed" text="Whitelisted" prefWidth="90"/>
+                <TableColumn fx:id="blackListed" text="Blacklisted" prefWidth="90"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <!-- ACTION BUTTONS BELOW TABLE -->
+    <bottom>
+        <HBox spacing="12" alignment="CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button text="Edit Selected" onAction="#editSelected"/>
+            <Button text="Add Comment" onAction="#addComment"/>
+            <Button text="Delete Selected" onAction="#deleteSelected"/>
+        </HBox>
+    </bottom>
+
+    <padding>
+        <Insets top="8" right="8" bottom="8" left="8"/>
+    </padding>
+</BorderPane>

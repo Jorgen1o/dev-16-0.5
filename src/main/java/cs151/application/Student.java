@@ -37,5 +37,18 @@ public class Student {
     public StringProperty whiteListedProperty() { return whiteListed; }
     public StringProperty blackListedProperty() { return blackListed; }
 
+    public void setFacultyComment(String comment) {
+        this.facultyComment.set(comment);
+    }
+    // In Student.java
+    public void addComment(String newComment) {
+        String existing = getFacultyComment();
+        if (existing == null || existing.isBlank()) {
+            setFacultyComment(newComment.replace("\n", " "));
+        } else {
+            // Avoid raw newlines; join with a separator
+            setFacultyComment(existing + " | " + newComment.replace("\n", " "));
+        }
+    }
 
 }

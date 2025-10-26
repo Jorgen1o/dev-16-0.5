@@ -14,7 +14,7 @@ public final class StudentStorage {
     private static final Path CSV_PATH = AppFiles.STUDENTS_CSV;
 
     private static final String HEADER =
-            "FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole,Faculty Comment, Whitelisted, Blacklisted";
+            "FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole,Faculty Comment,Whitelisted,Blacklisted";
 
     private StudentStorage() {}
 
@@ -76,15 +76,41 @@ public final class StudentStorage {
     public static List<String[]> readAllRows() throws IOException {
         List<String[]> rows = new ArrayList<>();
         if (!Files.exists(CSV_PATH)) return rows;
+
         try (BufferedReader br = Files.newBufferedReader(CSV_PATH, StandardCharsets.UTF_8)) {
+            StringBuilder record = new StringBuilder();
             String line;
             boolean header = true;
+
             while ((line = br.readLine()) != null) {
-                if (header) { header = false; continue; }
-                rows.add(parseCsvLine(line));
+                if (header) {
+                    header = false;
+                    continue;
+                }
+
+                // Append this line to current record
+                if (record.length() > 0) record.append("\n");
+                record.append(line);
+
+                // If quotes are balanced, we reached the end of the record
+                if (isCompleteRecord(record.toString())) {
+                    rows.add(parseCsvLine(record.toString()));
+                    record.setLength(0);
+                }
+            }
+
+            // In case last record has no trailing newline
+            if (record.length() > 0) {
+                rows.add(parseCsvLine(record.toString()));
             }
         }
         return rows;
+    }
+
+    /** True if the quoted field count is balanced (record complete). */
+    private static boolean isCompleteRecord(String record) {
+        long quoteCount = record.chars().filter(ch -> ch == '"').count();
+        return quoteCount % 2 == 0;
     }
 
     /** Delete first row that matches the given Student (all fields). */
@@ -98,18 +124,42 @@ public final class StudentStorage {
         writeAllRows(rows);
     }
 
+    /** Update an existing student row matched by Full Name. */
+    public static void updateStudent(Student s) throws IOException {
+        List<String[]> rows = readAllRows();
+        boolean updated = false;
+
+        for (int i = 0; i < rows.size(); i++) {
+            String[] r = rows.get(i);
+
+            // Match by Full Name only (primary key)
+            if (eq(r[0], s.getFullName())) {
+                rows.set(i, new String[]{
+                        s.getFullName(),
+                        s.getAcademicStatus(),
+                        s.getEmployed(),
+                        s.getJobDetails(),
+                        s.getProgrammingLanguages(),
+                        s.getDatabases(),
+                        s.getPreferredRole(),
+                        s.getFacultyComment(),
+                        toYesNo(s.getWhiteListed()),
+                        toYesNo(s.getBlackListed())
+                });
+                updated = true;
+                break;
+            }
+        }
+
+        if (!updated) {
+            throw new IllegalStateException("Student not found to update: " + s.getFullName());
+        }
+
+        writeAllRows(rows);
+    }
+
     private static boolean matches(String[] r, Student s) {
-        if (r.length < 7) return false;
-        return eq(r[0], s.getFullName())
-                && eq(r[1], s.getAcademicStatus())
-                && eq(r[2], s.getEmployed())
-                && eq(r[3], s.getJobDetails())
-                && eq(r[4], s.getProgrammingLanguages())
-                && eq(r[5], s.getDatabases())
-                && eq(r[6], s.getPreferredRole())
-                && eq(r[7], s.getFacultyComment())
-                && eq(toYesNo(r[8]), toYesNo(s.getWhiteListed()))
-                && eq(toYesNo(r[9]), toYesNo(s.getBlackListed()));
+        return eq(r[0], s.getFullName());
     }
 
     private static boolean eq(String a, String b) {

@@ -53,6 +53,28 @@ public class ViewStudentsController {
         whiteListed.setCellValueFactory(new PropertyValueFactory<>("whiteListed"));
         blackListed.setCellValueFactory(new PropertyValueFactory<>("blackListed"));
 
+        facultyComment.setCellFactory(col -> {
+            return new TableCell<Student, String>() {
+                private final javafx.scene.text.Text text = new javafx.scene.text.Text();
+                {
+                    text.wrappingWidthProperty().bind(col.widthProperty().subtract(16)); // padding
+                    setGraphic(text);
+                }
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item); // shows real \n as line breaks
+                    }
+                }
+            };
+        });
+
+        // Allow row height to auto-resize for multiline text
+        studentsTable.setFixedCellSize(-1);
+
         refresh();
     }
 
@@ -109,12 +131,73 @@ public class ViewStudentsController {
     }
 
     @FXML
+    private void addComment() {
+        Student sel = studentsTable.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "Select a student to add a comment.", ButtonType.OK);
+            a.setHeaderText("No selection");
+            a.showAndWait();
+            return;
+        }
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Add Comment");
+        dialog.setHeaderText("Add new comment for " + sel.getFullName());
+        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
+
+        TextArea ta = new TextArea();
+        ta.setPromptText("Type your comment...");
+        ta.setWrapText(true);
+        ta.setPrefRowCount(6);
+        dialog.getDialogPane().setContent(ta);
+
+        dialog.showAndWait().ifPresent(btn -> {
+            if (btn == saveBtn) {
+                String comment = ta.getText().trim();
+                if (!comment.isEmpty()) {
+                    String datedComment = java.time.LocalDate.now() + ": " + comment;
+
+                    // append with a real newline (use OS line separator)
+                    String existing = sel.getFacultyComment();
+                    String sep = System.lineSeparator();
+                    if (existing == null || existing.isBlank()) {
+                        sel.setFacultyComment(datedComment);
+                    } else {
+                        sel.setFacultyComment(existing + sep + datedComment);
+                    }
+
+                    try {
+                        StudentStorage.updateStudent(sel);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        new Alert(Alert.AlertType.ERROR, "Failed to save comment.", ButtonType.OK).showAndWait();
+                    }
+
+                    studentsTable.refresh();
+                }
+            }
+        });
+    }
+
+
+    @FXML
     protected void goBack(javafx.event.ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cs151/application/hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 500);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.setTitle("Home");
+        stage.show();
+    }
+
+    @FXML
+    private void goToSearchStudents(javafx.event.ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/SearchStudents.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Search Student Profiles");
         stage.show();
     }
 }
