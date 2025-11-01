@@ -192,6 +192,29 @@ public class ViewStudentsController {
     }
 
     @FXML
+    private void editSelected(javafx.event.ActionEvent event) throws IOException {
+        Student sel = studentsTable.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "Select a row to edit.", ButtonType.OK);
+            a.setHeaderText("No selection");
+            a.showAndWait();
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/define-students.fxml"));
+        Scene scene = new Scene(loader.load(), 900, 600);
+
+        // hand the selected student to the form controller
+        DefineStudentsController ctrl = loader.getController();
+        ctrl.editExistingStudent(sel);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Edit Student Profile");
+        stage.show();
+    }
+
+    @FXML
     private void goToSearchStudents(javafx.event.ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/SearchStudents.fxml"));
         Scene scene = new Scene(loader.load());
