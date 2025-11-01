@@ -3,6 +3,7 @@ FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,Prefe
 "Jorge","Graduate","No","","Java;Python;C++","MySQL;PostgreSQL;MongoDB","Full Stack Developer","Graduate
 2025-10-25: Looking for work","No","No"
 "Johnathan Tweet","Freshman","Yes","Chick Fill A worker","Java;Python","MySQL","Backend Developer","Smart student, enrolled in finish in 4","true","false"
-"Bat Man","Junior","Yes","On Campus Assistant","Java;Python","MySQL","Data Engineer","Enrolled in Finish in 4","true","false"
+"Bat Man","Junior","Yes","On Campus Assistant","Java;Python","MySQL","Data Engineer","Enrolled in Finish in 4
+2025-10-31: New comment","Yes","No"
 "Student A","Junior","No","","Java","MongoDB","","No comment
 2025-10-25: Interning at Nvidia","Yes","No"

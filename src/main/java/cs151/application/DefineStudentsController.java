@@ -14,6 +14,7 @@ import static cs151.application.AppFiles.loadLanguages;
 public class DefineStudentsController {
 
     // fx:id MUST match define-students.fxml
+    @FXML private Button submitBtn;
     @FXML private TextField fullNameField;
     @FXML private ComboBox<String> academicStatusCombo;
     @FXML private CheckBox employedCheckBox;
@@ -24,6 +25,9 @@ public class DefineStudentsController {
     @FXML private TextArea commentsArea;
     @FXML private CheckBox whitelistCheckBox;
     @FXML private CheckBox blacklistCheckBox;
+
+    private boolean editMode = false;
+    private String originalFullName = null;
 
     private static final String ERR_STYLE =
             "-fx-border-color:#d32f2f; -fx-border-width:1; -fx-border-radius:4;";
@@ -122,53 +126,72 @@ public class DefineStudentsController {
 
     /** Called by Add button (onAction="#addStudent") */
     @FXML
-    protected void addStudent() {
+    private void addStudent() {
+        // Basic validation
+        if (fullNameField.getText() == null || fullNameField.getText().isBlank()) {
+            new Alert(Alert.AlertType.WARNING, "Full Name is required.", ButtonType.OK).showAndWait();
+            return;
+        }
+        if (whitelistCheckBox.isSelected() && blacklistCheckBox.isSelected()) {
+            new Alert(Alert.AlertType.WARNING, "Whitelist and Blacklist are mutually exclusive.", ButtonType.OK).showAndWait();
+            return;
+        }
+
+        Student s = buildFromForm();
+
         try {
-            String name = text(fullNameField);
-            if (StudentStorage.existsByName(name)) {
-                alert(Alert.AlertType.ERROR, "Duplicate Student",
-                        "A student named \"" + name + "\" already exists. " +
-                                "Please edit the existing entry or use a unique name.");
-                return;
-            }
-            if (name.isBlank()) {
-                alert(Alert.AlertType.WARNING, "Missing Name", "Please enter the student's name.");
-                return;
-            }
-            String academic = combo(academicStatusCombo);
-            String employed = employedCheckBox != null && employedCheckBox.isSelected() ? "Yes" : "No";
-            String job = text(jobDetailsField);
-
-            if (!validateRequiredSelections()) return;
-            String langs = String.join(", ", languagesList.getSelectionModel().getSelectedItems());
-            String dbs = String.join(", ", databasesList.getSelectionModel().getSelectedItems());
-            String role = preferredRoleCombo.getValue().trim();
-            String initialComment = (commentsArea == null || commentsArea.getText() == null)
-                    ? "" : commentsArea.getText().trim();
-            boolean white = whitelistCheckBox.isSelected();
-            boolean black = blacklistCheckBox.isSelected();
-
-            if (employedCheckBox != null && employedCheckBox.isSelected()) {
-                if (jobDetailsField == null || jobDetailsField.getText() == null || jobDetailsField.getText().trim().isEmpty()) {
-                    alert(Alert.AlertType.WARNING,
-                            "Missing Job Details",
-                            "Job Details is required when Employed is checked.");
-                    if (jobDetailsField != null) jobDetailsField.requestFocus();
-                    return; // stop; do not save until filled
-                }
+            if (editMode) {
+                // rename-safe update (see StudentStorage change below)
+                StudentStorage.updateStudent(originalFullName, s);
             } else {
-                // If not employed, make sure we don't accidentally save stale details
-                if (jobDetailsField != null) jobDetailsField.clear();
+                // append new row
+                StudentStorage.appendRow(new String[]{
+                        s.getFullName(),
+                        s.getAcademicStatus(),
+                        s.getEmployed(),
+                        s.getJobDetails(),
+                        s.getProgrammingLanguages(),
+                        s.getDatabases(),
+                        s.getPreferredRole(),
+                        s.getFacultyComment(),
+                        s.getWhiteListed(),
+                        s.getBlackListed()
+                });
             }
-
-            StudentStorage.appendRow(new String[]{name, academic, employed, job, langs, dbs, role, initialComment, String.valueOf(white), String.valueOf(black)});
-            alert(Alert.AlertType.INFORMATION, "Saved", "Student added successfully!");
-            clearForm();
+            new Alert(Alert.AlertType.INFORMATION, editMode ? "Changes saved." : "Student added.", ButtonType.OK).showAndWait();
+            if (!editMode) clearForm();  // keep edit fields on screen
         } catch (Exception e) {
             e.printStackTrace();
-            alert(Alert.AlertType.ERROR, "Error", "Unable to save: " + e.getMessage());
+            new Alert(Alert.AlertType.ERROR, "Failed to save: " + e.getMessage(), ButtonType.OK).showAndWait();
         }
     }
+
+    private Student buildFromForm() {
+        Student s = new Student();
+        s.setFullName(fullNameField.getText().trim());
+        s.setAcademicStatus(valueOf(academicStatusCombo));
+        s.setEmployed(employedCheckBox.isSelected() ? "Yes" : "No");
+        s.setJobDetails(textOf(jobDetailsField));
+        s.setProgrammingLanguages(joinSelected(languagesList));
+        s.setDatabases(joinSelected(databasesList));
+        s.setPreferredRole(valueOf(preferredRoleCombo));
+        s.setFacultyComment(textOf(commentsArea));
+        s.setWhiteListed(whitelistCheckBox.isSelected() ? "Yes" : "No");
+        s.setBlackListed(blacklistCheckBox.isSelected() ? "Yes" : "No");
+        return s;
+    }
+
+    private String valueOf(ComboBox<String> cb) {
+        return cb != null && cb.getValue() != null ? cb.getValue() : "";
+    }
+    private String textOf(TextInputControl t) {
+        return t != null && t.getText() != null ? t.getText().trim() : "";
+    }
+    private String joinSelected(ListView<String> lv) {
+        if (lv == null) return "";
+        return String.join(", ", lv.getSelectionModel().getSelectedItems());
+    }
+
 
     @FXML
     protected void goBack(javafx.event.ActionEvent event) throws IOException {
@@ -179,6 +202,45 @@ public class DefineStudentsController {
         stage.setTitle("Home");
         stage.show();
     }
+
+    public void editExistingStudent(Student s) {
+        editMode = true;
+        originalFullName = s.getFullName();
+
+        if (submitBtn != null) submitBtn.setText("Save Changes");
+
+        if (fullNameField != null) fullNameField.setText(s.getFullName());
+        if (academicStatusCombo != null) academicStatusCombo.getSelectionModel().select(s.getAcademicStatus());
+        if (employedCheckBox != null) employedCheckBox.setSelected(parseYes(s.getEmployed()));
+        if (jobDetailsField != null) jobDetailsField.setText(s.getJobDetails());
+        if (preferredRoleCombo != null) preferredRoleCombo.getSelectionModel().select(s.getPreferredRole());
+        if (commentsArea != null) commentsArea.setText(s.getFacultyComment());
+        if (whitelistCheckBox != null) whitelistCheckBox.setSelected(parseYes(s.getWhiteListed()));
+        if (blacklistCheckBox != null) blacklistCheckBox.setSelected(parseYes(s.getBlackListed()));
+
+        // select multiple values by splitting CSV-like strings
+        selectListValues(languagesList, s.getProgrammingLanguages());
+        selectListValues(databasesList, s.getDatabases());
+    }
+
+    private boolean parseYes(String v) {
+        if (v == null) return false;
+        String t = v.trim().toLowerCase();
+        return t.equals("yes") || t.equals("true") || t.equals("y") || t.equals("1");
+    }
+
+    private void selectListValues(ListView<String> lv, String csv) {
+        if (lv == null || csv == null) return;
+        var items = lv.getItems();
+        var toSelect = java.util.Arrays.stream(csv.split(","))
+                .map(String::trim).filter(s -> !s.isEmpty()).toList();
+        for (int i = 0; i < items.size(); i++) {
+            if (toSelect.contains(items.get(i))) {
+                lv.getSelectionModel().select(i);
+            }
+        }
+    }
+
 
     /* ---- helpers ---- */
     private static String text(TextField f) { return f == null ? "" : f.getText().trim(); }

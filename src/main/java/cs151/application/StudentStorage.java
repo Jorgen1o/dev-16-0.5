@@ -125,15 +125,13 @@ public final class StudentStorage {
     }
 
     /** Update an existing student row matched by Full Name. */
-    public static void updateStudent(Student s) throws IOException {
+    public static void updateStudent(String originalFullName, Student s) throws IOException {
         List<String[]> rows = readAllRows();
         boolean updated = false;
 
         for (int i = 0; i < rows.size(); i++) {
             String[] r = rows.get(i);
-
-            // Match by Full Name only (primary key)
-            if (eq(r[0], s.getFullName())) {
+            if (eq(r[0], originalFullName)) {
                 rows.set(i, new String[]{
                         s.getFullName(),
                         s.getAcademicStatus(),
@@ -152,9 +150,8 @@ public final class StudentStorage {
         }
 
         if (!updated) {
-            throw new IllegalStateException("Student not found to update: " + s.getFullName());
+            throw new IllegalStateException("Student not found to update: " + originalFullName);
         }
-
         writeAllRows(rows);
     }
 

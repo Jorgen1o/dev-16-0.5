@@ -127,14 +127,26 @@ public class SearchStudentsController {
     }
 
     @FXML
-    private void editSelected() {
+    private void editSelected(javafx.event.ActionEvent event) throws IOException {
         Student sel = studentsTable.getSelectionModel().getSelectedItem();
         if (sel == null) {
-            alert("No selection", "Select a student to edit.");
+            alert("No selection", "Select a row to edit.");
             return;
         }
-        alert("Edit", "Edit function not yet implemented on this page.");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/define-students.fxml"));
+        Scene scene = new Scene(loader.load(), 900, 600);
+
+        // hand the selected student to the form controller
+        DefineStudentsController ctrl = loader.getController();
+        ctrl.editExistingStudent(sel);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Edit Student Profile");
+        stage.show();
     }
+
 
     @FXML
     private void addComment() {
@@ -169,7 +181,7 @@ public class SearchStudentsController {
                     );
 
                     try {
-                        StudentStorage.updateStudent(sel);
+                        StudentStorage.updateStudent(sel.getFullName(), sel);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

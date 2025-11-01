@@ -168,7 +168,7 @@ public class ViewStudentsController {
                     }
 
                     try {
-                        StudentStorage.updateStudent(sel);
+                        StudentStorage.updateStudent(sel.getFullName(), sel);
                     } catch (Exception e) {
                         e.printStackTrace();
                         new Alert(Alert.AlertType.ERROR, "Failed to save comment.", ButtonType.OK).showAndWait();

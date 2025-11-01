@@ -16,6 +16,8 @@ public class Student {
     private final SimpleStringProperty whiteListed = new SimpleStringProperty();
     private final SimpleStringProperty blackListed = new SimpleStringProperty();
 
+    public Student(){}
+
     public Student(String name, String acad, String emp, String job, String langs, String dbs, String role, String facComment, String whiteListed, String blackListed) {
         fullName.set(name); academicStatus.set(acad); employed.set(emp);
         jobDetails.set(job); programmingLanguages.set(langs); databases.set(dbs); preferredRole.set(role);
@@ -37,9 +39,20 @@ public class Student {
     public StringProperty whiteListedProperty() { return whiteListed; }
     public StringProperty blackListedProperty() { return blackListed; }
 
+    private static String nz(String s) { return s == null ? "" : s; }
+
+    public void setFullName(String v) { this.fullName.set(nz(v)); }
+    public void setAcademicStatus(String v) { this.academicStatus.set(nz(v)); }
+    public void setEmployed(String v) { this.employed.set(nz(v)); }
+    public void setJobDetails(String v) { this.jobDetails.set(nz(v)); }
+    public void setProgrammingLanguages(String v) { this.programmingLanguages.set(nz(v)); }
+    public void setDatabases(String v) { this.databases.set(nz(v)); }
+    public void setPreferredRole(String v) { this.preferredRole.set(nz(v)); }
     public void setFacultyComment(String comment) {
         this.facultyComment.set(comment);
     }
+    public void setWhiteListed(String v) { this.whiteListed.set(nz(v)); }
+    public void setBlackListed(String v) { this.blackListed.set(nz(v)); }
     // In Student.java
     public void addComment(String newComment) {
         String existing = getFacultyComment();
