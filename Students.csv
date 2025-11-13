@@ -1,8 +1,9 @@
 FullName,AcademicStatus,Employed,JobDetails,ProgrammingLanguages,Databases,PreferredRole,Faculty Comment,Whitelisted,Blacklisted
-"Amrit Santhnam","Senior","No","","C++","PostgreSQL","Backend Developer","Performative student","true","false"
+"Amrit Santhnam","Senior","No","","Python, C++","MongoDB","Backend Developer","Performative student","Yes","No"
 "Jorge","Graduate","No","","Java;Python;C++","MySQL;PostgreSQL;MongoDB","Full Stack Developer","Graduate
-2025-10-25: Looking for work","No","No"
+2025-10-25: Looking for work
+[2025-11-12] Got a job","No","No"
 "Johnathan Tweet","Freshman","Yes","Chick Fill A worker","Java;Python","MySQL","Backend Developer","Smart student, enrolled in finish in 4","true","false"
-"Bat Man","Junior","No","","","MySQL","Data Engineer","Enrolled in Finish in 4
+"Bat Man","Junior","No","","Python","MySQL","Data Engineer","Enrolled in Finish in 4
 2025-10-31: New comment","Yes","No"
 "Student A","Junior","No","","Java","MongoDB","","No comment","Yes","No"

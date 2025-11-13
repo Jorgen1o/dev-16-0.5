@@ -180,6 +180,59 @@ public class ViewStudentsController {
         });
     }
 
+    @FXML
+    private void editSelected(javafx.event.ActionEvent event) throws IOException {
+        Student sel = studentsTable.getSelectionModel().getSelectedItem();
+
+        if (sel == null) {
+            Alert a = new Alert(
+                    Alert.AlertType.WARNING,
+                    "Select a row to edit.",
+                    ButtonType.OK
+            );
+            a.setHeaderText("No selection");
+            a.showAndWait();
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/cs151/application/define-students.fxml")
+        );
+
+        Scene scene = new Scene(loader.load(), 900, 600);
+
+        // hand the selected student to the form controller
+        DefineStudentsController ctrl = loader.getController();
+        ctrl.editExistingStudent(sel);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Edit Student Profile");
+        stage.show();
+    }
+
+    @FXML
+    private void viewComments(javafx.event.ActionEvent event) throws IOException {
+        Student sel = studentsTable.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "Select a student to view comments.", ButtonType.OK);
+            a.setHeaderText("No selection");
+            a.showAndWait();
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/student-comments.fxml"));
+        Scene scene = new Scene(loader.load(), 700, 500);
+
+        // Give the selected student to the comments controller
+        StudentCommentsController ctrl = loader.getController();
+        ctrl.setStudent(sel);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Comments for " + sel.getFullName());
+        stage.show();
+    }
 
     @FXML
     protected void goBack(javafx.event.ActionEvent event) throws IOException {
