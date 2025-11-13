@@ -195,13 +195,29 @@ public class DefineStudentsController {
 
     @FXML
     protected void goBack(javafx.event.ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cs151/application/hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 500);
+        String fxml;
+        String title;
+
+        if (editMode) {
+            // Came from ViewStudents page
+            fxml = "/cs151/application/view-students.fxml";
+            title = "View Student Profiles";
+        } else {
+            // Came from Main Menu
+            fxml = "/cs151/application/hello-view.fxml";
+            title = "Home";
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+        Scene scene = new Scene(loader.load(), 900, 600); // adjust size if needed
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
-        stage.setTitle("Home");
+        stage.setTitle(title);
         stage.show();
     }
+
+
 
     public void editExistingStudent(Student s) {
         editMode = true;

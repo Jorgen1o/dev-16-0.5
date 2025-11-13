@@ -220,7 +220,7 @@ public class SearchStudentsController {
 
     @FXML
     private void goBack(javafx.event.ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/hello-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/view-students.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);

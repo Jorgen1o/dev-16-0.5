@@ -15,9 +15,12 @@
         <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
     </padding>
 
-    <!-- Title -->
-    <Label text="Define Programming Languages"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <HBox alignment="CENTER_LEFT" spacing="20.0">
+        <Button text="Back" onAction="#goBack"/>
+        <Label text="Define Programming Languages"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    </HBox>
+
 
     <!-- Input row -->
     <HBox spacing="10.0" alignment="CENTER_LEFT" maxWidth="Infinity">
@@ -39,6 +42,5 @@
         <Button text="Clear" onAction="#onClear"/>
         <Button text="Delete Selected" onAction="#onDelete"/>
         <Pane HBox.hgrow="ALWAYS"/>
-        <Button text="Back" onAction="#goBack"/>
     </HBox>
 </VBox>

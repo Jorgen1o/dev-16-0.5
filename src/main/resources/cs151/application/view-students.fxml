@@ -15,7 +15,8 @@
             <Label text="  All Stored Students Profiles" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
             <Pane HBox.hgrow="ALWAYS"/> <!-- pushes delete button to the right -->
             <Button text="Edit Selected" onAction="#editSelected"/>
-            <Button text="Add Comment" onAction="#addComment"/>
+            <Button text="Edit Selected" onAction="#editSelected"/>
+            <Button text="View Comments" onAction="#viewComments"/>
             <Button text="Search Student Profiles" onAction="#goToSearchStudents"/>
             <Button text="Delete Selected" onAction="#deleteSelected"/>
         </ToolBar>

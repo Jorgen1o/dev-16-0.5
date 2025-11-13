@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cs151.application.StudentCommentsController"
+            prefWidth="700.0" prefHeight="500.0">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+            </padding>
+            <children>
+                <Button text="Back" onAction="#handleBack"/>
+                <Label text="Comments for:"
+                       style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+                <Label fx:id="studentNameLabel"
+                       style="-fx-font-size:16px;"/>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- CENTER: list of existing comments -->
+    <center>
+        <VBox spacing="5.0">
+            <padding>
+                <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+            </padding>
+            <children>
+                <Label text="Existing Comments:"
+                       style="-fx-font-weight:bold;"/>
+                <ListView fx:id="commentsListView" VBox.vgrow="ALWAYS"/>
+            </children>
+        </VBox>
+    </center>
+
+    <!-- BOTTOM: add new comment -->
+    <bottom>
+        <VBox spacing="5.0">
+            <padding>
+                <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+            </padding>
+            <children>
+                <Label text="Add New Comment (auto-stamped with today's date):"
+                       style="-fx-font-weight:bold;"/>
+                <TextArea fx:id="newCommentArea"
+                          wrapText="true"
+                          prefRowCount="4"/>
+                <Button text="Save Comment"
+                        onAction="#handleAddComment"
+                        maxWidth="1.7976931348623157E308"/>
+            </children>
+        </VBox>
+    </bottom>
+
+</BorderPane>

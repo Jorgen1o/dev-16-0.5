@@ -13,9 +13,9 @@
 
     <top>
         <ToolBar>
+            <Button text="Back" onAction="#goBack"/>
             <Label text="  Define Student Profiles" style="-fx-font-size:18px; -fx-font-weight:bold;"/>
             <Pane HBox.hgrow="ALWAYS"/>
-            <Button text="Back" onAction="#goBack"/>
         </ToolBar>
     </top>
 
